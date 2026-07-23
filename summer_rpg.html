@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星輝夏令營：時光沙漏的奇蹟 (完全版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.5/cdn.min.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', 'ZCOOL KuaiLe', sans-serif; background-color: #1a1c29; }
+        .switch-card { border: 4px solid #2d3748; box-shadow: 0 6px 0 #1a202c; border-radius: 1.5rem; }
+        .switch-btn { border: 3px solid #1a202c; box-shadow: 0 4px 0 #1a202c; transition: all 0.1s ease; }
+        .switch-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #1a202c; }
+        .game-font { font-family: 'ZCOOL KuaiLe', cursive; }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen pb-12 select-none" x-data="switchGameApp()">
+
+    <!-- 頂部 Switch 風格狀態列 -->
+    <header class="bg-slate-800 border-b-4 border-slate-900 sticky top-0 z-50 px-3 py-3 shadow-md">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+            
+            <!-- 兄弟切換與冒險序號設定 -->
+            <div class="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto">
+                <div class="bg-amber-400 text-slate-950 font-black px-2.5 py-1 rounded-xl text-xs sm:text-sm border-2 border-slate-900 shadow flex items-center gap-1">
+                    <span>🎮 序號:</span> 
+                    <input type="text" x-model="heroLogId" @change="saveAll()" class="bg-transparent w-14 text-slate-950 font-black focus:outline-none text-center">
+                </div>
+                
+                <!-- 兄弟切換按鈕 -->
+                <div class="flex bg-slate-900 p-1 rounded-xl border-2 border-slate-700">
+                    <button @click="switchHero('brother1')" :class="activeHero === 'brother1' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                        <span>👦</span>
+                        <input type="text" x-model="heroes.brother1.name" @change="saveAll()" class="bg-transparent w-16 text-center font-bold focus:outline-none cursor-pointer">
+                    </button>
+                    <button @click="switchHero('brother2')" :class="activeHero === 'brother2' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                        <span>🧒</span>
+                        <input type="text" x-model="heroes.brother2.name" @change="saveAll()" class="bg-transparent w-16 text-center font-bold focus:outline-none cursor-pointer">
+                    </button>
+                </div>
+            </div>
+
+            <!-- 數據與分享按鈕群 -->
+            <div class="flex items-center gap-2 flex-wrap justify-center">
+                <div class="bg-slate-900 px-2 py-1 rounded-xl border-2 border-cyan-500/50 text-xs">
+                    ✨ <span class="text-cyan-400 font-bold" x-text="heroes[activeHero].weeklyExp"></span> EXP
+                </div>
+                <div class="bg-slate-900 px-2 py-1 rounded-xl border-2 border-amber-500/50 text-xs">
+                    🪙 <span class="text-amber-400 font-bold" x-text="heroes[activeHero].weeklyGold"></span> Gold
+                </div>
+                <button @click="openExportModal()" class="bg-purple-600 hover:bg-purple-500 text-white px-2.5 py-1 rounded-xl text-xs font-bold switch-btn">
+                    📤 匯出存檔
+                </button>
+                <button @click="openImportModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded-xl text-xs font-bold switch-btn">
+                    📥 匯入存檔
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 存檔彈出視窗 (Modal) -->
+    <template x-if="showModal">
+        <div class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+            <div class="bg-slate-900 border-4 border-amber-400 rounded-3xl p-6 max-w-lg w-full shadow-2xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-black text-amber-300" x-text="modalTitle"></h3>
+                    <button @click="showModal = false" class="text-slate-400 hover:text-white font-bold text-lg">✕</button>
+                </div>
+                <p class="text-xs text-slate-300 mb-3" x-text="modalDesc"></p>
+                <textarea x-model="modalText" rows="6" class="w-full bg-slate-950 border-2 border-slate-700 rounded-xl p-3 text-xs text-amber-300 font-mono focus:outline-none focus:border-amber-400 mb-4"></textarea>
+                <div class="flex justify-end gap-3">
+                    <button @click="showModal = false" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-xs font-bold">關閉</button>
+                    <button x-show="isExportMode" @click="copyModalText()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-5 py-2 rounded-xl text-xs font-black switch-btn">📋 複製代碼</button>
+                    <button x-show="!isExportMode" @click="confirmImport()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-5 py-2 rounded-xl text-xs font-black switch-btn">✅ 確認套用代碼</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- 主遊戲選單容器 -->
+    <main class="max-w-6xl mx-auto p-3 sm:p-6 mt-3">
+        
+        <!-- 頂部頁籤切換 -->
+        <nav class="flex flex-wrap justify-center gap-2 mb-6">
+            <button @click="currentTab = 'world'" :class="currentTab === 'world' ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-300'" class="px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm switch-btn flex items-center gap-1.5">
+                <span>🗺️</span> 冒險地圖
+            </button>
+            <button @click="currentTab = 'tasks'" :class="currentTab === 'tasks' ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-300'" class="px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm switch-btn flex items-center gap-1.5">
+                <span>⚔️</span> 每日技能任務
+            </button>
+            <button @click="currentTab = 'words'" :class="currentTab === 'words' ? 'bg-purple-500 text-slate-950' : 'bg-slate-800 text-slate-300'" class="px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm switch-btn flex items-center gap-1.5">
+                <span>📚</span> 語文圖鑑 (50題)
+            </button>
+            <button @click="currentTab = 'season'" :class="currentTab === 'season' ? 'bg-pink-500 text-slate-950' : 'bg-slate-800 text-slate-300'" class="px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm switch-btn flex items-center gap-1.5">
+                <span>🏆</span> 每週賽季榜與逆轉
+            </button>
+        </nav>
+
+        <!-- ================= 頁籤 1：冒險地圖 ================= -->
+        <div x-show="currentTab === 'world'" class="space-y-6">
+            <div class="bg-slate-800 switch-card p-4 md:p-6 flex items-start gap-4 bg-gradient-to-r from-slate-800 to-indigo-950">
+                <div class="text-3xl sm:text-4xl bg-slate-900 p-3 rounded-2xl border-2 border-amber-400">🦉</div>
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-amber-400 font-black text-sm">時光精靈「波波」</span>
+                        <span class="text-xs bg-slate-900 px-2 py-0.5 rounded text-cyan-300">雙人獨立賽季冒險中！</span>
+                    </div>
+                    <p class="text-xs sm:text-base text-slate-200" x-text="currentNpcDialogue"></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                <template x-for="(map, index) in maps" :key="index">
+                    <button @click="selectedMapIndex = index; updateDialogue()" :class="selectedMapIndex === index ? 'border-amber-400 bg-amber-500/20 scale-105' : 'border-slate-700 bg-slate-800/80'" class="switch-card p-4 text-center transition">
+                        <div class="text-3xl mb-1" x-text="map.icon"></div>
+                        <div class="font-bold text-sm text-slate-100" x-text="map.name"></div>
+                        <div class="text-xs text-slate-400 mt-1" x-text="'Day ' + map.days"></div>
+                    </button>
+                </template>
+            </div>
+
+            <div class="bg-slate-800 switch-card p-6 border-4 border-slate-700">
+                <div>
+                    <span class="text-xs bg-purple-900 text-purple-300 font-bold px-3 py-1 rounded-full border border-purple-500" x-text="maps[selectedMapIndex].theme"></span>
+                    <h2 class="text-xl sm:text-2xl font-black text-amber-400 game-font mt-2" x-text="maps[selectedMapIndex].name + '：' + maps[selectedMapIndex].title"></h2>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1" x-text="maps[selectedMapIndex].desc"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 頁籤 2：每日技能任務 ================= -->
+        <div x-show="currentTab === 'tasks'" class="space-y-6">
+            <div class="bg-slate-800 switch-card p-4 sm:p-6">
+                <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-black text-emerald-400 game-font">
+                            ⚔️ 每日技能任務 —— <span class="text-amber-300" x-text="heroes[activeHero].name"></span>
+                        </h2>
+                        <p class="text-xs text-slate-400">勾選打卡累積積分，每週一歸零公平競爭！</p>
+                    </div>
+                    <button @click="resetTodayTasks()" class="bg-slate-700 hover:bg-slate-600 text-xs px-3 py-1.5 rounded-lg text-slate-300">
+                        🔄 重置今日勾選
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <template x-for="(task, key) in taskList" :key="key">
+                        <div class="bg-slate-900/80 p-3 sm:p-4 rounded-2xl border-2 border-slate-700 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl" x-text="task.icon"></span>
+                                <div>
+                                    <div class="font-bold text-sm" x-text="task.title"></div>
+                                    <div class="text-xs text-slate-400" x-text="task.desc"></div>
+                                    <div class="text-xs font-bold text-cyan-400 mt-1" x-text="'+ ' + task.exp + ' EXP | + ' + task.gold + ' Gold'"></div>
+                                </div>
+                            </div>
+                            <input type="checkbox" x-model="heroes[activeHero].tasks[key]" @change="completeTask(key)" class="w-6 h-6 accent-amber-500 rounded-lg cursor-pointer">
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 游泳秒數 -->
+            <div class="bg-slate-800 switch-card p-4 sm:p-6">
+                <h2 class="text-base sm:text-lg font-black text-cyan-400 game-font mb-3">游泳力秒數記錄 —— <span class="text-amber-300" x-text="heroes[activeHero].name"></span></h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="bg-slate-900 p-3 rounded-xl border-2 border-slate-700">
+                        <label class="text-xs text-slate-400 block mb-1 font-bold">自由式秒數</label>
+                        <input type="text" x-model="heroes[activeHero].swim.freestyle" @change="saveAll()" placeholder="例: 25秒" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-2 text-center text-cyan-300 font-bold text-sm">
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-xl border-2 border-slate-700">
+                        <label class="text-xs text-slate-400 block mb-1 font-bold">仰式秒數</label>
+                        <input type="text" x-model="heroes[activeHero].swim.backstroke" @change="saveAll()" placeholder="例: 30秒" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-2 text-center text-cyan-300 font-bold text-sm">
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-xl border-2 border-slate-700">
+                        <label class="text-xs text-slate-400 block mb-1 font-bold">蛙式秒數</label>
+                        <input type="text" x-model="heroes[activeHero].swim.breaststroke" @change="saveAll()" placeholder="例: 35秒" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-2 text-center text-cyan-300 font-bold text-sm">
+                    </div>
+                    <div class="bg-slate-900 p-3 rounded-xl border-2 border-slate-700">
+                        <label class="text-xs text-slate-400 block mb-1 font-bold">蝶式秒數</label>
+                        <input type="text" x-model="heroes[activeHero].swim.butterfly" @change="saveAll()" placeholder="例: 40秒" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-2 text-center text-cyan-300 font-bold text-sm">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 頁籤 3：語文圖鑑 50題循環 ================= -->
+        <div x-show="currentTab === 'words'" class="space-y-6">
+            <div class="bg-slate-800 switch-card p-4 sm:p-6 text-center max-w-2xl mx-auto">
+                <div class="text-4xl mb-2">📖</div>
+                <h2 class="text-xl sm:text-2xl font-black text-purple-400 game-font mb-1">
+                    語文圖鑑記憶循環 —— <span class="text-amber-300" x-text="heroes[activeHero].name"></span>
+                </h2>
+                <p class="text-xs text-slate-400 mb-6">嚴格 50 題 5 次循環機制，每題精準追蹤！</p>
+                
+                <div class="bg-slate-900 p-6 rounded-3xl border-4 border-purple-500/50 mb-6">
+                    <div class="text-xs sm:text-sm text-slate-400 mb-1">題號 / 50 題</div>
+                    <div class="text-4xl sm:text-5xl font-black text-amber-300 mb-2">
+                        <span x-text="heroes[activeHero].wordIndex"></span> <span class="text-slate-500 text-2xl">/ 50</span>
+                    </div>
+                    <div class="text-xs sm:text-sm font-bold text-purple-300">
+                        ✨ 循環輪次：第 <span x-text="heroes[activeHero].wordCycle"></span> / 5 次
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-3">
+                    <button @click="advanceWord(1)" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-3 rounded-2xl switch-btn text-sm">
+                        推進 1 題 (+10 EXP)
+                    </button>
+                    <button @click="advanceWord(6)" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-3 rounded-2xl switch-btn text-sm">
+                        推進 6 題 (今日支線)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 頁籤 4：每週賽季榜與逆轉 ================= -->
+        <div x-show="currentTab === 'season'" class="space-y-6">
+            <div class="bg-slate-800 switch-card p-4 sm:p-6">
+                <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-black text-pink-400 game-font">🏆 每週賽季排行榜與反敗為勝</h2>
+                        <p class="text-xs text-slate-400 mt-1">每週結算一次！輸家不用灰心，每週一可以全新歸零重新挑戰！</p>
+                    </div>
+                    <button @click="resetWeeklySeason()" class="bg-pink-600 hover:bg-pink-500 text-white font-black px-4 py-2.5 rounded-xl text-xs sm:text-sm switch-btn">
+                        🏁 結算本週賽季並重置積分
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-slate-900 p-4 rounded-2xl border-2 border-blue-500">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-black text-blue-400 text-base" x-text="heroes.brother1.name"></h3>
+                            <span class="text-xs bg-blue-950 text-blue-300 px-2 py-0.5 rounded-full border border-blue-600">挑戰者</span>
+                        </div>
+                        <div class="space-y-2 text-xs sm:text-sm">
+                            <div class="flex justify-between bg-slate-800 p-2 rounded-xl">
+                                <span class="text-slate-400">本週 EXP：</span>
+                                <span class="text-cyan-400 font-bold" x-text="heroes.brother1.weeklyExp"></span>
+                            </div>
+                            <div class="flex justify-between bg-slate-800 p-2 rounded-xl">
+                                <span class="text-slate-400">本週 Gold：</span>
+                                <span class="text-amber-400 font-bold" x-text="heroes.brother1.weeklyGold"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-2xl border-2 border-emerald-500">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-black text-emerald-400 text-base" x-text="heroes.brother2.name"></h3>
+                            <span class="text-xs bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-600">挑戰者</span>
+                        </div>
+                        <div class="space-y-2 text-xs sm:text-sm">
+                            <div class="flex justify-between bg-slate-800 p-2 rounded-xl">
+                                <span class="text-slate-400">本週 EXP：</span>
+                                <span class="text-cyan-400 font-bold" x-text="heroes.brother2.weeklyExp"></span>
+                            </div>
+                            <div class="flex justify-between bg-slate-800 p-2 rounded-xl">
+                                <span class="text-slate-400">本週 Gold：</span>
+                                <span class="text-amber-400 font-bold" x-text="heroes.brother2.weeklyGold"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-700 pt-4">
+                    <h3 class="font-black text-amber-300 text-sm sm:text-md mb-3">🏅 歷史賽季冠軍名人堂 (Hall of Fame)</h3>
+                    <div class="space-y-2">
+                        <template x-for="(record, index) in seasonHistory" :key="index">
+                            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 flex justify-between items-center text-xs sm:text-sm">
+                                <div class="font-bold text-slate-200" x-text="record.seasonName"></div>
+                                <div class="text-amber-400 font-black" x-text="'👑 冠軍：' + record.winnerName + ' (' + record.winnerExp + ' EXP)'"></div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function switchGameApp() {
+            return {
+                currentTab: 'world',
+                activeHero: 'brother1',
+                heroLogId: 'SWITCH-079',
+                selectedMapIndex: 0,
+                currentNpcDialogue: '歡迎來到微風營地！點擊右上角「📤 匯出存檔」會跳出專屬視窗，複製代碼就能輕鬆跨裝置同步囉！',
+
+                showModal: false,
+                isExportMode: true,
+                modalTitle: '',
+                modalDesc: '',
+                modalText: '',
+
+                heroes: {
+                    brother1: {
+                        name: '哥哥勇者',
+                        weeklyExp: 280,
+                        weeklyGold: 90,
+                        wordIndex: 1,
+                        wordCycle: 1,
+                        tasks: { reading: false, math: false, ai: false, craft: false, rubik: false, music: false, stamina: false, virtue: false },
+                        swim: { freestyle: '', backstroke: '', breaststroke: '', butterfly: '' }
+                    },
+                    brother2: {
+                        name: '弟弟勇者',
+                        weeklyExp: 310,
+                        weeklyGold: 100,
+                        wordIndex: 1,
+                        wordCycle: 1,
+                        tasks: { reading: false, math: false, ai: false, craft: false, rubik: false, music: false, stamina: false, virtue: false },
+                        swim: { freestyle: '', backstroke: '', breaststroke: '', butterfly: '' }
+                    }
+                },
+
+                seasonHistory: [
+                    { seasonName: '第 1 週星輝賽季', winnerName: '弟弟勇者', winnerExp: 450 }
+                ],
+
+                maps: [
+                    { name: '微風營地', title: '起始之家', icon: '🏡', theme: '動森休閒', desc: '兄弟倆的溫馨基地。', days: '1-8' },
+                    { name: '智慧樹海', title: '迷霧圖書館', icon: '🌳', theme: '閱讀作文', desc: '充滿古代碑文的迷霧森林。', days: '9-16' },
+                    { name: '幾何礦山', title: '齒輪峽谷', icon: '⚙️', theme: '數學魔方', desc: '充滿齒輪與軌道的機械迷城。', days: '17-24' },
+                    { name: '珊瑚海灣', title: '深海龍宮', icon: '🌊', theme: '游泳體能', desc: '蔚藍大海與海底秘境。', days: '25-32' },
+                    { name: '迴音峽谷', title: '交響樂峽谷', icon: '🎶', theme: '音樂共鳴', desc: '自然交響樂的神奇峽谷。', days: '33-40' }
+                ],
+
+                taskList: {
+                    reading: { icon: '📖', title: '閱讀森林 & 作文', desc: '天天閱讀與作文練習', exp: 40, gold: 15 },
+                    math: { icon: '🧮', title: '數學高手 & 奧林匹克', desc: '完成數學題庫挑戰', exp: 40, gold: 15 },
+                    ai: { icon: '🤖', title: 'AI力使用 (GPT/Canva)', desc: '學習AI指令或創作', exp: 35, gold: 10 },
+                    craft: { icon: '🎨', title: '創造力 (丙烯粉彩)', desc: '完成美術創作或勞作', exp: 40, gold: 20 },
+                    rubik: { icon: '🧊', title: '魔方使用 & YT範例', desc: '還原魔方或跟練', exp: 30, gold: 10 },
+                    music: { icon: '🎵', title: '音樂力 (練習30分鐘)', desc: '樂器練習達成共鳴', exp: 35, gold: 15 },
+                    stamina: { icon: '⚡', title: '體力值 (跳繩 300 下)', desc: '鍛鍊心肺維持精力', exp: 30, gold: 10 },
+                    virtue: { icon: '💖', title: '品格力 (今天沒被罵)', desc: '保持良好習慣', exp: 50, gold: 20 }
+                },
+
+                init() {
+                    const saved = localStorage.getItem('nintendo_summer_rpg_complete');
+                    if (saved) {
+                        try {
+                            const data = JSON.parse(saved);
+                            this.heroes = data.heroes || this.heroes;
+                            this.heroLogId = data.heroLogId || 'SWITCH-079';
+                            this.seasonHistory = data.seasonHistory || this.seasonHistory;
+                        } catch(e){}
+                    }
+                    this.updateDialogue();
+                },
+
+                switchHero(heroKey) {
+                    this.activeHero = heroKey;
+                },
+
+                saveAll() {
+                    const data = {
+                        heroes: this.heroes,
+                        heroLogId: this.heroLogId,
+                        seasonHistory: this.seasonHistory
+                    };
+                    localStorage.setItem('nintendo_summer_rpg_complete', JSON.stringify(data));
+                },
+
+                completeTask(key) {
+                    const hero = this.heroes[this.activeHero];
+                    if (hero.tasks[key]) {
+                        const t = this.taskList[key];
+                        hero.weeklyExp += t.exp;
+                        hero.weeklyGold += t.gold;
+                        this.saveAll();
+                    }
+                },
+
+                resetTodayTasks() {
+                    const hero = this.heroes[this.activeHero];
+                    Object.keys(hero.tasks).forEach(k => hero.tasks[k] = false);
+                    this.saveAll();
+                    alert(hero.name + ' 的今日打卡已重置！');
+                },
+
+                advanceWord(amount) {
+                    const hero = this.heroes[this.activeHero];
+                    hero.wordIndex += amount;
+                    if (hero.wordIndex > 50) {
+                        hero.wordIndex = 1;
+                        hero.wordCycle += 1;
+                        alert('🌟 太神啦！' + hero.name + ' 完成一輪 50 題英文單字循環！輪次提升至第 ' + hero.wordCycle + ' 次！');
+                    }
+                    hero.weeklyExp += (amount * 5);
+                    hero.weeklyGold += (amount * 2);
+                    this.saveAll();
+                },
+
+                resetWeeklySeason() {
+                    const b1 = this.heroes.brother1;
+                    const b2 = this.heroes.brother2;
+                    let winner = b1.weeklyExp >= b2.weeklyExp ? b1 : b2;
+                    
+                    const seasonName = `第 ${this.seasonHistory.length + 1} 週星輝賽季`;
+                    this.seasonHistory.unshift({
+                        seasonName: seasonName,
+                        winnerName: winner.name,
+                        winnerExp: winner.weeklyExp
+                    });
+
+                    alert(`🏁 賽季結算完畢！恭喜 ${winner.name} 贏得本週冠軍！分數已歸零，新的一週反敗為勝戰局正式展開！`);
+
+                    b1.weeklyExp = 0; b1.weeklyGold = 0;
+                    Object.keys(b1.tasks).forEach(k => b1.tasks[k] = false);
+                    
+                    b2.weeklyExp = 0; b2.weeklyGold = 0;
+                    Object.keys(b2.tasks).forEach(k => b2.tasks[k] = false);
+
+                    this.saveAll();
+                },
+
+                openExportModal() {
+                    const data = {
+                        heroes: this.heroes,
+                        heroLogId: this.heroLogId,
+                        seasonHistory: this.seasonHistory
+                    };
+                    this.modalTitle = '📤 匯出遊戲存檔';
+                    this.modalDesc = '請點選下方框框內的文字，全選並複製，即可傳給其他人！';
+                    this.modalText = JSON.stringify(data);
+                    this.isExportMode = true;
+                    this.showModal = true;
+                },
+
+                copyModalText() {
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(this.modalText).then(() => {
+                            alert('✅ 存檔代碼已成功複製到剪貼簿！');
+                        });
+                    } else {
+                        alert('請手動選取文字框內的所有文字進行複製。');
+                    }
+                },
+
+                openImportModal() {
+                    this.modalTitle = '📥 匯入遊戲存檔';
+                    this.modalDesc = '請將從其他裝置複製的存檔代碼，完整貼在下方的框框內，然後點擊確認套用：';
+                    this.modalText = '';
+                    this.isExportMode = false;
+                    this.showModal = true;
+                },
+
+                confirmImport() {
+                    if (!this.modalText.trim()) {
+                        alert('❌ 請先貼入存檔代碼！');
+                        return;
+                    }
+                    try {
+                        const parsed = JSON.parse(this.modalText);
+                        if (parsed.heroes) {
+                            this.heroes = parsed.heroes;
+                            this.heroLogId = parsed.heroLogId || 'SWITCH-079';
+                            this.seasonHistory = parsed.seasonHistory || this.seasonHistory;
+                            this.saveAll();
+                            this.showModal = false;
+                            alert('🎉 成功匯入存檔！所有冒險資料已同步更新！');
+                        } else {
+                            alert('❌ 存檔格式錯誤，請確認貼上的是完整的代碼。');
+                        }
+                    } catch(e) {
+                        alert('❌ 解析代碼失敗，請確認代碼是否有遺漏字元。');
+                    }
+                },
+
+                updateDialogue() {
+                    const dialogues = [
+                        '歡迎來到微風營地！點擊右上角「📤 匯出存檔」會跳出專屬視窗，複製代碼就能輕鬆跨裝置同步囉！',
+                        '樹海深處有古老的碑文，只要認真閱讀，就能學會召喚植物生長的魔法！',
+                        '幾何礦山的齒輪壞了！快用數學與魔方力來幫忙修復軌道吧！',
+                        '珊瑚海灣的水很清澈！去泳池遊幾趟，解鎖更深的潛水記錄吧！',
+                        '聽見風的聲音了嗎？拿起樂器練習 30 分鐘，就能讓雲龍安靜下來！'
+                    ];
+                    this.currentNpcDialogue = dialogues[this.selectedMapIndex];
+                }
+            }
+        }
+    </script>
+</body>
+</html>
