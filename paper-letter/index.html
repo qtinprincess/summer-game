@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>紙信 — 25 秒紙片立體書</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+      #root { position: relative; width: 1920px; height: 1080px; }
+      #stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; }
+    </style>
+    <script type="importmap">{ "imports": { "three": "./vendor/three.module.js" } }</script>
+    <script src="vendor/gsap.min.js"></script>
+  </head>
+  <body>
+    <!-- HyperFrames 合成：Three.js 場景由 hf-seek 事件逐格驅動，渲染器逐格擷取 canvas -->
+    <div id="root" data-composition-id="paper-letter" data-start="0" data-duration="25" data-width="1920" data-height="1080" data-fps="24">
+      <canvas id="stage" class="clip" data-start="0" data-duration="25" data-track-index="0" width="1920" height="1080"></canvas>
+      <audio id="score" src="assets/audio/paper-letter.m4a" data-start="0" data-duration="25" data-track-index="1" data-volume="1"></audio>
+    </div>
+    <script type="module">
+      import { buildStage } from './src/scene.js';
+
+      // 空的 GSAP 主時間軸：只負責告訴 HyperFrames 這支片有 25 秒；畫面全由 hf-seek 驅動
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.to({}, { duration: 25 }, 0);
+      window.__timelines['paper-letter'] = tl;
+
+      const ready = buildStage({ canvas: document.getElementById('stage'), width: 1920, height: 1080 });
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady['paper-letter'] = ready;
+      window.__paperLetter = { ready };
+
+      window.addEventListener('hf-seek', (e) => {
+        const t = e.detail.time;
+        e.detail.waitUntil(ready.then((stage) => stage.render(t)));
+      });
+      ready.then((stage) => { window.__paperLetter.stage = stage; stage.render(0); }).catch((err) => { console.error('build failed', err); window.__paperLetterError = String(err && err.stack || err); });
+    </script>
+  </body>
+</html>

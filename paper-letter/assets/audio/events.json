@@ -1,0 +1,771 @@
+{
+ "footfalls": [
+  {
+   "t": 4,
+   "x": -9.523532089212562,
+   "gait": "walk",
+   "card": "hero_walkA",
+   "wet": false
+  },
+  {
+   "t": 4.333333333333333,
+   "x": -8.711111111111112,
+   "gait": "walk",
+   "card": "hero_walkC",
+   "wet": false
+  },
+  {
+   "t": 6,
+   "x": -8.4,
+   "gait": "hold",
+   "card": "hero_holdA",
+   "wet": false
+  },
+  {
+   "t": 6.333333333333333,
+   "x": -7.833333333333334,
+   "gait": "hold",
+   "card": "hero_holdC",
+   "wet": false
+  },
+  {
+   "t": 6.666666666666667,
+   "x": -7.266666666666667,
+   "gait": "hold",
+   "card": "hero_holdA",
+   "wet": false
+  },
+  {
+   "t": 7,
+   "x": -6.7,
+   "gait": "hold",
+   "card": "hero_holdC",
+   "wet": false
+  },
+  {
+   "t": 7.333333333333333,
+   "x": -6.133333333333335,
+   "gait": "hold",
+   "card": "hero_holdA",
+   "wet": false
+  },
+  {
+   "t": 7.666666666666667,
+   "x": -5.566666666666666,
+   "gait": "hold",
+   "card": "hero_holdC",
+   "wet": true
+  },
+  {
+   "t": 8,
+   "x": -5,
+   "gait": "hold",
+   "card": "hero_holdA",
+   "wet": true
+  },
+  {
+   "t": 8.333333333333334,
+   "x": -4.433333333333333,
+   "gait": "hold",
+   "card": "hero_holdC",
+   "wet": true
+  },
+  {
+   "t": 8.666666666666666,
+   "x": -3.866666666666668,
+   "gait": "hold",
+   "card": "hero_holdA",
+   "wet": true
+  },
+  {
+   "t": 9.833333333333334,
+   "x": -3.574914089347081,
+   "gait": "run",
+   "card": "hero_runC",
+   "wet": true
+  },
+  {
+   "t": 10,
+   "x": -4.124742268041237,
+   "gait": "run",
+   "card": "hero_runA",
+   "wet": true
+  },
+  {
+   "t": 10.166666666666666,
+   "x": -4.674570446735393,
+   "gait": "run",
+   "card": "hero_runC",
+   "wet": true
+  },
+  {
+   "t": 10.333333333333334,
+   "x": -5.224398625429555,
+   "gait": "run",
+   "card": "hero_runA",
+   "wet": true
+  },
+  {
+   "t": 10.5,
+   "x": -5.774226804123711,
+   "gait": "run",
+   "card": "hero_runC",
+   "wet": true
+  },
+  {
+   "t": 10.666666666666666,
+   "x": -6.324054982817867,
+   "gait": "run",
+   "card": "hero_runA",
+   "wet": true
+  },
+  {
+   "t": 13,
+   "x": -6.000000000000002,
+   "gait": "umb",
+   "card": "hero_umbC",
+   "wet": true
+  },
+  {
+   "t": 13.333333333333334,
+   "x": -5.166666666666667,
+   "gait": "umb",
+   "card": "hero_umbA",
+   "wet": true
+  },
+  {
+   "t": 13.666666666666666,
+   "x": -4.333333333333337,
+   "gait": "umb",
+   "card": "hero_umbC",
+   "wet": true
+  },
+  {
+   "t": 14,
+   "x": -3.5000000000000018,
+   "gait": "umb",
+   "card": "hero_umbA",
+   "wet": true
+  },
+  {
+   "t": 14.333333333333334,
+   "x": -2.666666666666667,
+   "gait": "umb",
+   "card": "hero_umbC",
+   "wet": true
+  },
+  {
+   "t": 14.666666666666666,
+   "x": -1.8333333333333366,
+   "gait": "umb",
+   "card": "hero_umbA",
+   "wet": true
+  },
+  {
+   "t": 15,
+   "x": -1.0000000000000018,
+   "gait": "umb",
+   "card": "hero_umbC",
+   "wet": false
+  },
+  {
+   "t": 15.333333333333334,
+   "x": -0.16666666666666696,
+   "gait": "umb",
+   "card": "hero_umbA",
+   "wet": false
+  },
+  {
+   "t": 15.666666666666666,
+   "x": 0.6666666666666634,
+   "gait": "hold",
+   "card": "hero_holdC",
+   "wet": false
+  },
+  {
+   "t": 16,
+   "x": 1.4999999999999982,
+   "gait": "hold",
+   "card": "hero_holdA",
+   "wet": false
+  },
+  {
+   "t": 16.333333333333332,
+   "x": 2.3333333333333286,
+   "gait": "hold",
+   "card": "hero_holdC",
+   "wet": false
+  },
+  {
+   "t": 16.666666666666668,
+   "x": 3.166666666666668,
+   "gait": "hold",
+   "card": "hero_holdA",
+   "wet": false
+  },
+  {
+   "t": 17,
+   "x": 3.9999999999999982,
+   "gait": "hold",
+   "card": "hero_holdC",
+   "wet": false
+  }
+ ],
+ "events": [
+  {
+   "t": 0.95,
+   "kind": "coverOpen"
+  },
+  {
+   "t": 1.9,
+   "kind": "pop_big",
+   "pan": -0.8963090484011861
+  },
+  {
+   "t": 2.7,
+   "kind": "pop_big",
+   "pan": -0.9397475382179534
+  },
+  {
+   "t": 2.85,
+   "kind": "pop_small",
+   "pan": -0.2362151822075389
+  },
+  {
+   "t": 3,
+   "kind": "pop_small",
+   "pan": -0.2956415724982787
+  },
+  {
+   "t": 3.05,
+   "kind": "pop_small",
+   "pan": 0.2837999114691998
+  },
+  {
+   "t": 3.2,
+   "kind": "pop_small",
+   "pan": -0.2941724954368202
+  },
+  {
+   "t": 3.3,
+   "kind": "pop_small",
+   "pan": -0.4009544079387193
+  },
+  {
+   "t": 3.35,
+   "kind": "pop_big",
+   "pan": 0.32806822278588627
+  },
+  {
+   "t": 4,
+   "kind": "step",
+   "gait": "walk",
+   "wet": false,
+   "pan": -0.19588785178909185
+  },
+  {
+   "t": 4.333333333333333,
+   "kind": "step",
+   "gait": "walk",
+   "wet": false,
+   "pan": -0.11130361670604139
+  },
+  {
+   "t": 4.55,
+   "kind": "flag"
+  },
+  {
+   "t": 4.9,
+   "kind": "grab"
+  },
+  {
+   "t": 6,
+   "kind": "step",
+   "gait": "hold",
+   "wet": false,
+   "pan": -0.16482409329732828
+  },
+  {
+   "t": 6.333333333333333,
+   "kind": "step",
+   "gait": "hold",
+   "wet": false,
+   "pan": -0.12589358581989396
+  },
+  {
+   "t": 6.5,
+   "kind": "fold",
+   "pan": 0.33714981802861627
+  },
+  {
+   "t": 6.666666666666667,
+   "kind": "step",
+   "gait": "hold",
+   "wet": false,
+   "pan": -0.11589529681414024
+  },
+  {
+   "t": 7,
+   "kind": "step",
+   "gait": "hold",
+   "wet": false,
+   "pan": -0.11421908669698988
+  },
+  {
+   "t": 7.333333333333333,
+   "kind": "step",
+   "gait": "hold",
+   "wet": false,
+   "pan": -0.11459365888208717
+  },
+  {
+   "t": 7.666666666666667,
+   "kind": "step",
+   "gait": "hold",
+   "wet": true,
+   "pan": -0.11521642879787553
+  },
+  {
+   "t": 8,
+   "kind": "step",
+   "gait": "hold",
+   "wet": true,
+   "pan": -0.11564364187469856
+  },
+  {
+   "t": 8.25,
+   "kind": "crack",
+   "big": false
+  },
+  {
+   "t": 8.333333333333334,
+   "kind": "step",
+   "gait": "hold",
+   "wet": true,
+   "pan": -0.11584473172060061
+  },
+  {
+   "t": 8.666666666666666,
+   "kind": "step",
+   "gait": "hold",
+   "wet": true,
+   "pan": -0.10945668497421474
+  },
+  {
+   "t": 8.8,
+   "kind": "thunder",
+   "big": false
+  },
+  {
+   "t": 9,
+   "kind": "gust"
+  },
+  {
+   "t": 9,
+   "kind": "flutter",
+   "dur": 1.5500000000000007
+  },
+  {
+   "t": 9,
+   "kind": "gasp"
+  },
+  {
+   "t": 9.5,
+   "kind": "flip"
+  },
+  {
+   "t": 9.833333333333334,
+   "kind": "step",
+   "gait": "run",
+   "wet": true,
+   "pan": 0.003982465815521086
+  },
+  {
+   "t": 10,
+   "kind": "step",
+   "gait": "run",
+   "wet": true,
+   "pan": -0.034522396060487626
+  },
+  {
+   "t": 10.1,
+   "kind": "crack",
+   "big": true
+  },
+  {
+   "t": 10.166666666666666,
+   "kind": "step",
+   "gait": "run",
+   "wet": true,
+   "pan": -0.05727520294149269
+  },
+  {
+   "t": 10.26,
+   "kind": "thunder",
+   "big": true
+  },
+  {
+   "t": 10.333333333333334,
+   "kind": "step",
+   "gait": "run",
+   "wet": true,
+   "pan": -0.0708971340554615
+  },
+  {
+   "t": 10.5,
+   "kind": "step",
+   "gait": "run",
+   "wet": true,
+   "pan": -0.07899147352976432
+  },
+  {
+   "t": 10.55,
+   "kind": "land"
+  },
+  {
+   "t": 10.666666666666666,
+   "kind": "step",
+   "gait": "run",
+   "wet": true,
+   "pan": -0.08369728743433513
+  },
+  {
+   "t": 11.25,
+   "kind": "grab"
+  },
+  {
+   "t": 12,
+   "kind": "flip"
+  },
+  {
+   "t": 12.3,
+   "kind": "umbrella"
+  },
+  {
+   "t": 13,
+   "kind": "step",
+   "gait": "umb",
+   "wet": true,
+   "pan": -0.15295078596204637
+  },
+  {
+   "t": 13.333333333333334,
+   "kind": "step",
+   "gait": "umb",
+   "wet": true,
+   "pan": -0.17443084473086395
+  },
+  {
+   "t": 13.55,
+   "kind": "pop_big",
+   "pan": 1
+  },
+  {
+   "t": 13.666666666666666,
+   "kind": "step",
+   "gait": "umb",
+   "wet": true,
+   "pan": -0.21065978609294533
+  },
+  {
+   "t": 14,
+   "kind": "step",
+   "gait": "umb",
+   "wet": true,
+   "pan": -0.2293558298026206
+  },
+  {
+   "t": 14.333333333333334,
+   "kind": "step",
+   "gait": "umb",
+   "wet": true,
+   "pan": -0.23185998458054852
+  },
+  {
+   "t": 14.45,
+   "kind": "pop_small",
+   "pan": 0.3968434894123499
+  },
+  {
+   "t": 14.666666666666666,
+   "kind": "step",
+   "gait": "umb",
+   "wet": true,
+   "pan": -0.19277719592075054
+  },
+  {
+   "t": 14.75,
+   "kind": "pop_big",
+   "pan": 1
+  },
+  {
+   "t": 15,
+   "kind": "pop_small",
+   "pan": 0.42823401385069954
+  },
+  {
+   "t": 15,
+   "kind": "step",
+   "gait": "umb",
+   "wet": false,
+   "pan": -0.1467659861493007
+  },
+  {
+   "t": 15.2,
+   "kind": "pop_small",
+   "pan": 1
+  },
+  {
+   "t": 15.333333333333334,
+   "kind": "step",
+   "gait": "umb",
+   "wet": false,
+   "pan": -0.1545712082178097
+  },
+  {
+   "t": 15.5,
+   "kind": "pop_small",
+   "pan": 0.5394213215131967
+  },
+  {
+   "t": 15.6,
+   "kind": "umbrellaClose"
+  },
+  {
+   "t": 15.666666666666666,
+   "kind": "step",
+   "gait": "hold",
+   "wet": false,
+   "pan": -0.11301666442894484
+  },
+  {
+   "t": 15.75,
+   "kind": "pop_rainbow",
+   "pan": 0.17113291053242097
+  },
+  {
+   "t": 16,
+   "kind": "step",
+   "gait": "hold",
+   "wet": false,
+   "pan": -0.03492450529375196
+  },
+  {
+   "t": 16.333333333333332,
+   "kind": "step",
+   "gait": "hold",
+   "wet": false,
+   "pan": 0.01217263924199502
+  },
+  {
+   "t": 16.4,
+   "kind": "pop_big",
+   "pan": 0.8614208093507698
+  },
+  {
+   "t": 16.666666666666668,
+   "kind": "step",
+   "gait": "hold",
+   "wet": false,
+   "pan": -0.015155874632905464
+  },
+  {
+   "t": 17,
+   "kind": "step",
+   "gait": "hold",
+   "wet": false,
+   "pan": -0.014275872294594483
+  },
+  {
+   "t": 17,
+   "kind": "boing"
+  },
+  {
+   "t": 17.3,
+   "kind": "pass"
+  },
+  {
+   "t": 19,
+   "kind": "pop_small",
+   "pan": 0.0025369348132758818
+  },
+  {
+   "t": 19.4,
+   "kind": "pop_heart",
+   "pan": 0.0006079790573865207
+  },
+  {
+   "t": 19.5,
+   "kind": "sparkle",
+   "note": 0
+  },
+  {
+   "t": 19.61,
+   "kind": "sparkle",
+   "note": 1
+  },
+  {
+   "t": 19.72,
+   "kind": "sparkle",
+   "note": 2
+  },
+  {
+   "t": 19.83,
+   "kind": "sparkle",
+   "note": 3
+  },
+  {
+   "t": 19.94,
+   "kind": "sparkle",
+   "note": 4
+  },
+  {
+   "t": 20.05,
+   "kind": "sparkle",
+   "note": 5
+  },
+  {
+   "t": 20.16,
+   "kind": "sparkle",
+   "note": 6
+  },
+  {
+   "t": 20.27,
+   "kind": "sparkle",
+   "note": 7
+  },
+  {
+   "t": 20.38,
+   "kind": "sparkle",
+   "note": 8
+  },
+  {
+   "t": 20.49,
+   "kind": "sparkle",
+   "note": 9
+  },
+  {
+   "t": 20.6,
+   "kind": "sparkle",
+   "note": 10
+  },
+  {
+   "t": 20.71,
+   "kind": "sparkle",
+   "note": 11
+  },
+  {
+   "t": 20.82,
+   "kind": "sparkle",
+   "note": 12
+  },
+  {
+   "t": 20.93,
+   "kind": "sparkle",
+   "note": 13
+  },
+  {
+   "t": 21.04,
+   "kind": "sparkle",
+   "note": 14
+  },
+  {
+   "t": 21.15,
+   "kind": "sparkle",
+   "note": 15
+  },
+  {
+   "t": 21.26,
+   "kind": "sparkle",
+   "note": 16
+  },
+  {
+   "t": 21.37,
+   "kind": "sparkle",
+   "note": 17
+  },
+  {
+   "t": 21.6,
+   "kind": "fold",
+   "pan": 0.5562071922176073
+  },
+  {
+   "t": 21.6,
+   "kind": "fold",
+   "pan": 0.006207192217607238
+  },
+  {
+   "t": 21.7,
+   "kind": "fold",
+   "pan": -1
+  },
+  {
+   "t": 21.7,
+   "kind": "fold",
+   "pan": -0.13340950856105832
+  },
+  {
+   "t": 21.8,
+   "kind": "fold",
+   "pan": -1
+  },
+  {
+   "t": 21.8,
+   "kind": "fold",
+   "pan": -0.9015641472768042
+  },
+  {
+   "t": 21.8,
+   "kind": "fold",
+   "pan": 0.7484358527231957
+  },
+  {
+   "t": 21.9,
+   "kind": "fold",
+   "pan": -1
+  },
+  {
+   "t": 21.9,
+   "kind": "fold",
+   "pan": -0.10364447975599517
+  },
+  {
+   "t": 21.9,
+   "kind": "fold",
+   "pan": 0.5588555202440049
+  },
+  {
+   "t": 21.9,
+   "kind": "lastDing"
+  },
+  {
+   "t": 22,
+   "kind": "fold",
+   "pan": -1
+  },
+  {
+   "t": 22,
+   "kind": "fold",
+   "pan": -1
+  },
+  {
+   "t": 22,
+   "kind": "fold",
+   "pan": 0.3905901041259321
+  },
+  {
+   "t": 22.5,
+   "kind": "fold",
+   "pan": -0.8189541004514808
+  },
+  {
+   "t": 22.6,
+   "kind": "fold",
+   "pan": 0.6708637098971577
+  },
+  {
+   "t": 23.15,
+   "kind": "coverClose"
+  }
+ ]
+}
