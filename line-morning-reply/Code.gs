@@ -51,7 +51,7 @@ function setup() {
     .filter(t => t.getHandlerFunction() === 'scheduleToday')
     .forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('scheduleToday').timeBased().atHour(6).everyDays(1).create();
-  SpreadsheetApp.getUi().alert('設定完成！下一步：部署成網頁應用程式，把網址貼到 LINE Webhook。');
+  Logger.log('設定完成！');
 }
 
 function onOpen() {
